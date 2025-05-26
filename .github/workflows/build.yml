@@ -20,6 +20,11 @@ jobs:
     outputs: 
       commits: ${{ steps.get-commits-step.outputs.commits }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Get a commit list
         id: get-commits-step
         run: |
