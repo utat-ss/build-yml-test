@@ -6,7 +6,7 @@ LOG_MODULE_REGISTER(pay);
 int main(void)
 {
 	while (1) {
-		LOG_INF("pay-commit-3");
+		LOG_INF("pay-commit-4");
 		k_msleep(1000);
 	}
 	return 0;
