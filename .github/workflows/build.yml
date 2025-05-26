@@ -40,8 +40,14 @@ jobs:
           
           echo "get-commits job -- commit list:"
           echo "$commits"
-          echo "commits=$commits" >> $GITHUB_OUTPUT
-          
+
+          # store $commits in the output
+          {
+            echo 'commits<<EOF'
+            echo "$commits"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
   build:
     needs: get-commits
     runs-on: ubuntu-24.04
