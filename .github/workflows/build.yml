@@ -42,11 +42,9 @@ jobs:
           echo "$commits"
 
           # store $commits in the output
-          {
-            echo 'commits<<EOF'
-            echo "$commits"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
+          echo 'commits<<EOF' >> "$GITHUB_OUTPUT"
+          echo "$commits" >> "$GITHUB_OUTPUT"
+          echo 'EOF' >> "$GITHUB_OUTPUT"
 
   build:
     needs: get-commits
@@ -96,7 +94,7 @@ jobs:
           echo "Commit list: $commits"
           for commit in $commits; do
             echo "Running a build on commit: $commit"
-            # west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
+            west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
           done
         env:
           commits: ${{ needs.get-commits.outputs.commits }}
