@@ -27,6 +27,8 @@ jobs:
 
       - name: Get a commit list
         id: get-commits-step
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Running on PR — checking all commits..."
