@@ -30,6 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -e
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Running on PR — checking all commits..."
             commits=$(gh pr view ${{ github.event.number }} --repo ${{ github.repository }} --json commits --jq '.commits[].oid')
@@ -37,7 +38,7 @@ jobs:
             echo "Running on push to main — checking HEAD only..."
             commits=$(git rev-parse HEAD)
           fi
-          
+
           echo "get-commits job -- commit list:"
           echo "$commits"
 
@@ -88,12 +89,14 @@ jobs:
 
       - name: Builds
         run: |
+          set -e
           source ../.venv/bin/activate
           source ../zephyr/zephyr-env.sh
-          
+
           echo "Commit list: $commits"
           for commit in $commits; do
             echo "Running a build on commit: $commit"
+            git checkout $commit
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
           done
         env:
