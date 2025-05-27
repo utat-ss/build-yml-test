@@ -95,9 +95,10 @@ jobs:
 
           echo "Commit list: $commits"
           for commit in $commits; do
-            echo "Running a build on commit: $commit"
+            echo "::group::build on a commit: $commit"
             git checkout $commit
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
+            echo "::endgroup::"
           done
         env:
           commits: ${{ needs.get-commits.outputs.commits }}
