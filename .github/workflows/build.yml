@@ -1,3 +1,8 @@
+# This workflow checks if all of the commits in the PR are buildable.
+# Additionally it also checks the last commit pushed to main.
+# To preserve consistency between different boards, the commit list
+# is pulled first as a separate job.
+
 name: Build
 
 on:
