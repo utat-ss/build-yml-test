@@ -103,8 +103,8 @@ jobs:
           echo "Commit list: $commits"
 
           for commit in $commits; do
-            echo "::group::build on a commit: $commit"
-            git checkout $commit || { echo "failed: git checkout $commit"; exit 1; }
+            echo "::group::Build on a commit $commit"
+            git checkout $commit || { echo "Failed: git checkout $commit"; exit 1; }
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
             build_status=$?
             echo "::endgroup::"
@@ -116,7 +116,7 @@ jobs:
           done
 
           if [ -z "$failed_commits" ]; then
-            echo -n "All commits are built succesfully for a "
+            echo -n "All commits are built successfully for a "
             echo "board: ${{ matrix.board }}, path: ${{ matrix.path }}."
             exit 0
           else
