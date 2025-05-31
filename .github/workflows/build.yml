@@ -112,7 +112,7 @@ jobs:
             if [ $build_status -ne 0 ]; then
               echo "Build on a commit $commit failed."
               failed_commits+="$commit "
-            done
+            fi
           done
 
           if [ -z "$failed_commits" ]; then
@@ -124,7 +124,7 @@ jobs:
             echo "board: ${{ matrix.board }}, path: ${{ matrix.path }}!"
             echo "Failed commits: $failed_commits."
             exit 1
-          done
+          fi
 
         env:
           commits: ${{ needs.get-commits.outputs.commits }}
