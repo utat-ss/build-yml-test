@@ -56,6 +56,7 @@ jobs:
     needs: get-commits
     runs-on: ubuntu-24.04
     strategy:
+      fail-fast: false
       matrix:
         include:
           - name: obc-native
@@ -94,16 +95,36 @@ jobs:
 
       - name: Builds
         run: |
-          set -e
           source ../.venv/bin/activate
           source ../zephyr/zephyr-env.sh
+          failed_commits=""
 
+          echo "Board: ${{ matrix.board }} Path: ${{ matrix.path }}"
           echo "Commit list: $commits"
+
           for commit in $commits; do
             echo "::group::build on a commit: $commit"
-            git checkout $commit
+            git checkout $commit || { echo "failed: git checkout $commit"; exit 1; }
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
+            build_status=$?
             echo "::endgroup::"
+
+            if [ $build_status -ne 0 ]; then
+              echo "Build on a commit $commit failed."
+              failed_commits+="$commit "
+            done
           done
+
+          if [ -z "$failed_commits" ]; then
+            echo -n "All commits are built succesfully for a "
+            echo "board: ${{ matrix.board }}, path: ${{ matrix.path }}."
+            exit 0
+          else
+            echo -n "One or more commits failed for a "
+            echo "board: ${{ matrix.board }}, path: ${{ matrix.path }}!"
+            echo "Failed commits: $failed_commits."
+            exit 1
+          done
+
         env:
           commits: ${{ needs.get-commits.outputs.commits }}
