@@ -6,7 +6,7 @@ LOG_MODULE_REGISTER(pay);
 int main(void)
 {
 	while (1) {
-		LOG_INF("pay change"); compile-fail
+		LOG_INF("pay change");
 		k_msleep(1000);
 	}
 	return 0;
