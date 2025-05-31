@@ -95,6 +95,7 @@ jobs:
 
       - name: Builds
         run: |
+          set +e
           source ../.venv/bin/activate
           source ../zephyr/zephyr-env.sh
           failed_commits=""
@@ -104,9 +105,11 @@ jobs:
 
           for commit in $commits; do
             echo "::group::Build on a commit $commit"
+
             git checkout $commit || { echo "Failed: git checkout $commit"; exit 1; }
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
             build_status=$?
+
             echo "::endgroup::"
 
             if [ $build_status -ne 0 ]; then
