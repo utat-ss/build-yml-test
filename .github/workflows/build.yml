@@ -112,8 +112,10 @@ jobs:
 
             echo "::endgroup::"
 
-            if [ $build_status -ne 0 ]; then
-              echo "Build on a commit $commit failed."
+            if [ $build_status -eq 0 ]; then
+              echo "Successfully built a commit $commit."
+            else
+              echo "Failed to build a commit $commit."
               failed_commits+="$commit "
             fi
           done
