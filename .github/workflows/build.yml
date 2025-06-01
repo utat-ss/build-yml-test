@@ -15,6 +15,11 @@ on:
     branches:
       - main
 
+# cancels previous runs if a workflow is retriggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pull-requests: read
