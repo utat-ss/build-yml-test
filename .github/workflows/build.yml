@@ -79,7 +79,7 @@ jobs:
 
           failed_commits=""
           for commit in $commits; do
-            echo "::group::$commit"
+            echo "::group::Building $commit"
 
             git checkout $commit
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
