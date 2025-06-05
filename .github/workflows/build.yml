@@ -74,8 +74,7 @@ jobs:
             commits=$(git rev-parse HEAD)
           fi
 
-          commit_count=$(echo "$commits" | wc -w)
-          echo -e "Building $commit_count commits:\n$commits"
+          echo "Commit list: $commits"
 
           failed_commits=""
 
