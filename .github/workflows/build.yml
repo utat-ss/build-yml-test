@@ -10,10 +10,6 @@ on:
     branches:
       - main
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
   pull-requests: read
@@ -37,12 +33,15 @@ jobs:
           - name: pay-nucleo
             board: nucleo_h743zi
             path: ./apps/pay
+          - name: eps-native
+            board: native_sim
+            path: ./apps/eps
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
@@ -63,7 +62,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          set +e
+          set -e
           source ../.venv/bin/activate
           source ../zephyr/zephyr-env.sh
 
@@ -75,15 +74,20 @@ jobs:
             commits=$(git rev-parse HEAD)
           fi
 
-          echo "Commit list: $commits"
+          commit_count = $(echo "$commits" | wc -w)
+          echo -e "Building $commit_count commits:\n$commits"
 
           failed_commits=""
+
           for commit in $commits; do
             echo "::group::Building $commit"
 
             git checkout $commit
+            set +e
+            rm -rf build/
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
             build_status=$?
+            set -e
 
             echo "::endgroup::"
 
