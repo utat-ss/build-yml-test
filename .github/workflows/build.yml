@@ -82,8 +82,8 @@ jobs:
             echo "::group::Building $commit"
 
             git checkout $commit
-            set +e
             rm -rf build/
+            set +e
             west -v build -b ${{ matrix.board }} ${{ matrix.path }} -p
             build_status=$?
             set -e
